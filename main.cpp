@@ -82,8 +82,10 @@ int main(int argc, const char * argv[]) {
     
     // * force the output file to the correct size
     std::ofstream outfile (outfile_str,std::ofstream::binary );
-    outfile.seekp(infile_size-1);
-    outfile<<'\0';
+    if(infile_size > 0) {
+        outfile.seekp(infile_size-1);
+        outfile<<'\0';
+    }
     outfile.close();
     
     // * create pool
