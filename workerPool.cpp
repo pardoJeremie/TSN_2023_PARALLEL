@@ -19,7 +19,10 @@ WorkerPool::WorkerPool(uint_fast32_t nb_threads) {
 // 1 - passer m_should_stop a true
 // 2 - notifier aux threads le changement
 WorkerPool::~WorkerPool() {
+    std::unique_lock<std::mutex> lck(m_tasks_mutex);
+
     m_should_stop = true;
+    
     m_task_cv.notify_all();
 }
 
@@ -60,7 +63,7 @@ WorkerPool::worker_data_t WorkerPool::get_task() { // attention, un seul worker 
     std::unique_lock<std::mutex> lck(m_tasks_mutex);
     
     if(m_tasks.empty()) {
-        if(m_should_stop)
+        if(!m_should_stop)
             m_task_cv.wait(lck);
         return m_should_stop;
     }

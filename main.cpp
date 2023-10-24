@@ -114,7 +114,6 @@ int main(int argc, const char * argv[]) {
             << " ns\n";
     
     // 7 - afficher stats (si besoin)
-
-    //if(printStates)
+    if(printStates)
         pool.printStates();
 }
