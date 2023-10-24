@@ -31,7 +31,7 @@ WorkerPool::~WorkerPool() {
 // 2 - notifier la presence d'une nouvelle tache pour les Workers (s'aider de m_task_cv)
 /*template<typename F, typename... A>
 void add_task(F&& task, A&&... args)*/
-// what the fuck ??? pourquoi utiliser une variatic sans exp lication?? c'est complexifier l'exercice pour rien. C'est bien, j'ai appris comment ça marche. par contre, je ne voit pas pourquoi on devrait l'utiliser
+// The fuck ??? pourquoi utiliser une variatic sans explication?? c'est complexifier l'exercice pour rien. C'est bien, j'ai appris qqchose de nouveau. par contre, je ne voit pas pourquoi et comment on devrait l'utiliser.
 void WorkerPool::add_task(std::function<void()> task) {
     std::unique_lock<std::mutex> lck(m_tasks_mutex);
     
