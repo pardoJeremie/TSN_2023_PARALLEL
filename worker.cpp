@@ -38,14 +38,13 @@ void Worker::loop() {
             auto task = std::get<task_t>(data);
             task();
             m_nb_task++;
+            m_pool.finalize_task();
         }
         catch(const std::bad_variant_access& /*ex*/) {// no tasks
             if(std::get<bool>(data)) // data return m_should_stop
             {
-                m_pool.finalize_task();
                 return;
             }
         }
-        m_pool.finalize_task();
     }
 }

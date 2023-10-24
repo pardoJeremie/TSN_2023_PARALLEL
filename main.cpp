@@ -17,20 +17,21 @@ auto wrong_input_msg (const char * program_call) {
     return EXIT_FAILURE;
 }
 
+
 void func_partial_cp (const std::string infile_str, const std::string outfile_str, uint_fast64_t blocksSize, const uint_fast64_t infile_size, const uint_fast64_t pos_blocksSize) {    // allocate memory for file content
     if (infile_size < blocksSize + pos_blocksSize)
         blocksSize = infile_size - pos_blocksSize;
 
     char* buffer = new char[blocksSize];
-    
+
     // read content of infile
     std::ifstream infile (infile_str,std::ifstream::binary);
     infile.seekg(pos_blocksSize);
     infile.read (buffer,blocksSize);
     infile.close();
-    
+
     // write to outfile
-    std::ofstream outfile (outfile_str,std::ofstream::binary);
+    std::fstream outfile(outfile_str, std::ios::binary | std::ios::in| std::ios::out | std::ios::ate);
     outfile.seekp(pos_blocksSize);
     outfile.write (buffer,blocksSize);
     outfile.close();
@@ -80,9 +81,9 @@ int main(int argc, const char * argv[]) {
     infile.close();
     
     // * force the output file to the correct size
-    std::ofstream outfile (outfile_str,std::ifstream::binary);
-    outfile.seekp(infile_size);
-    outfile << '0';
+    std::ofstream outfile (outfile_str,std::ofstream::binary );
+    outfile.seekp(infile_size-1);
+    outfile<<'\0';
     outfile.close();
     
     // * create pool
@@ -95,8 +96,10 @@ int main(int argc, const char * argv[]) {
     // 2 - demarrer chrono
     auto start = std::chrono::steady_clock::now();
     
+
     // 3 - ajouter toutes les taches
     for(uint_fast64_t pos = 0; pos < infile_size; pos += blocksSize)
+        //func_partial_cp(infile_str, outfile_str, blocksSize, infile_size, pos);
         pool.add_task([infile_str, outfile_str, blocksSize, infile_size,pos](){ func_partial_cp(infile_str, outfile_str, blocksSize, infile_size, pos); });
     
     // 4 - attendre terminaison des taches
@@ -112,6 +115,6 @@ int main(int argc, const char * argv[]) {
     
     // 7 - afficher stats (si besoin)
 
-    if(printStates)
+    //if(printStates)
         pool.printStates();
 }
