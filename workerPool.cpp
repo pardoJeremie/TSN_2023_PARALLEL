@@ -80,8 +80,8 @@ WorkerPool::worker_data_t WorkerPool::get_task() { // attention, un seul worker 
 // 2 - notifier qu'une tache est terminee (pour wait_all)
 void WorkerPool::finalize_task() {
     std::unique_lock<std::mutex> lck(m_tasks_mutex);
-    if(m_running_tasks) {
-        m_running_tasks --;}
+    
+    m_running_tasks --;
     
     m_task_cv.notify_all();
 }

@@ -42,9 +42,7 @@ void Worker::loop() {
         }
         catch(const std::bad_variant_access& /*ex*/) {// no tasks
             if(std::get<bool>(data)) // data return m_should_stop
-            {
                 return;
-            }
         }
     }
 }
