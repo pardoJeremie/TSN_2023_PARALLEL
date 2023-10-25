@@ -13,6 +13,7 @@
 #include <vector>
 #include <queue>
 #include <memory>
+#include <utility>
 
 #include "worker.hpp"
 
@@ -36,10 +37,13 @@ public:
     
     // 1 - ajoute la tache a m_tasks
     // 2 - notifier la presence d'une nouvelle tache pour les Workers (s'aider de m_task_cv)
-    /*template<typename F, typename... A>
-    void add_task(F&& task, A&&... args)*/
-    // The fuck ??? pourquoi utiliser une variatic sans explication?? c'est complexifier l'exercice pour rien. C'est bien, j'ai appris qqchose de nouveau. par contre, je ne voit pas pourquoi et comment on devrait l'utiliser.
-    void add_task(std::function<void()> task);
+    // merci https://eli.thegreenplace.net/2014/perfect-forwarding-and-universal-references-in-c/ et https://stackoverflow.com/questions/7257144/when-to-use-stdforward-to-forward-arguments pour l'explication
+    template<typename F, typename... A>
+    void add_task(F&& task, A&&... args){
+        std::unique_lock<std::mutex> lck(m_tasks_mutex);
+        
+        m_tasks.push([=](){task(args...);});
+    }
     
     // attends la terminaison de toutes les taches,
     // en cours et en attente dans m_tasks.

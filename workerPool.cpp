@@ -26,18 +26,6 @@ WorkerPool::~WorkerPool() {
     m_task_cv.notify_all();
 }
 
-
-// 1 - ajoute la tache a m_tasks
-// 2 - notifier la presence d'une nouvelle tache pour les Workers (s'aider de m_task_cv)
-/*template<typename F, typename... A>
-void add_task(F&& task, A&&... args)*/
-// The fuck ??? pourquoi utiliser une variatic sans explication?? c'est complexifier l'exercice pour rien. C'est bien, j'ai appris qqchose de nouveau. par contre, je ne voit pas pourquoi et comment on devrait l'utiliser.
-void WorkerPool::add_task(std::function<void()> task) {
-    std::unique_lock<std::mutex> lck(m_tasks_mutex);
-    
-    m_tasks.push(task);
-}
-
 // attends la terminaison de toutes les taches,
 // en cours et en attente dans m_tasks.
 // L'appelant est bloque tant que (m_running_tasks != 0) || (m_tasks.empty() == false)

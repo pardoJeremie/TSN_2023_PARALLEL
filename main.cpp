@@ -101,8 +101,7 @@ int main(int argc, const char * argv[]) {
 
     // 3 - ajouter toutes les taches
     for(uint_fast64_t pos = 0; pos < infile_size; pos += blocksSize)
-        //func_partial_cp(infile_str, outfile_str, blocksSize, infile_size, pos);
-        pool.add_task([infile_str, outfile_str, blocksSize, infile_size,pos](){ func_partial_cp(infile_str, outfile_str, blocksSize, infile_size, pos); });
+        pool.add_task(func_partial_cp,infile_str, outfile_str, blocksSize, infile_size, pos);
     
     // 4 - attendre terminaison des taches
     pool.wait_all();
